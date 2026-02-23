@@ -4,9 +4,14 @@ import { useFinancialProfile } from "@/hooks/useFinancialProfile";
 import { useFinancialSnapshot } from "@/hooks/useFinancialSnapshot";
 import { useProjection } from "@/hooks/useProjection";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { DemoBanner } from "@/components/shared/DemoBanner";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { FireProgress } from "@/components/dashboard/FireProgress";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import dynamic from "next/dynamic";
+import { Sparkles } from "lucide-react";
 import { formatCurrency, formatPercent, formatYears, formatDate } from "@/lib/format";
 
 const ProjectionChart = dynamic(
@@ -20,7 +25,7 @@ const ExpenseBreakdown = dynamic(
 );
 
 export default function DashboardPage() {
-  const { profile, isLoading, hasData } = useFinancialProfile();
+  const { profile, isLoading, hasData, isDemoMode } = useFinancialProfile();
   const snapshot = useFinancialSnapshot(profile);
   const projection = useProjection(profile);
 
@@ -69,9 +74,19 @@ export default function DashboardPage() {
     }
   }
 
+  // Quick-start profiles have exactly 1 income + 1 expense + 1 asset + 0 liabilities
+  const isMinimalProfile =
+    !isDemoMode &&
+    profile.incomes.length === 1 &&
+    profile.expenses.length === 1 &&
+    profile.assets.length <= 1 &&
+    profile.liabilities.length === 0;
+
   return (
     <div className="space-y-6">
-      <div className="animate-card-in rounded-lg bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20 p-5">
+      <DemoBanner />
+
+      <div className="rounded-lg bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20 p-5">
         <p className="text-base font-semibold text-foreground leading-snug">
           {heroHeadline}
         </p>
@@ -80,7 +95,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="animate-card-in grid grid-cols-2 gap-4 lg:grid-cols-4" style={{ animationDelay: "0.05s" }}>
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <MetricCard
           label="Net Worth"
           value={formatCurrency(snapshot.netWorth)}
@@ -127,28 +142,37 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="animate-card-in" style={{ animationDelay: "0.1s" }}>
-        <FireProgress
-          investableAssets={snapshot.investableAssets}
-          fireNumber={snapshot.fireNumber}
-          progress={snapshot.fireProgress}
-          netWorth={snapshot.netWorth}
-        />
-      </div>
+      <FireProgress
+        investableAssets={snapshot.investableAssets}
+        fireNumber={snapshot.fireNumber}
+        progress={snapshot.fireProgress}
+        netWorth={snapshot.netWorth}
+      />
 
-      {projection.length > 0 && (
-        <div className="animate-card-in" style={{ animationDelay: "0.15s" }}>
-          <ProjectionChart data={projection} />
-        </div>
-      )}
+      {projection.length > 0 && <ProjectionChart data={projection} />}
 
       {profile.expenses.length > 0 && (
-        <div className="animate-card-in" style={{ animationDelay: "0.2s" }}>
-          <ExpenseBreakdown expenses={profile.expenses} />
-        </div>
+        <ExpenseBreakdown expenses={profile.expenses} />
       )}
 
-      {profile.lastUpdated && (
+      {isMinimalProfile && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="flex items-center justify-between py-4">
+            <div className="flex items-center gap-3">
+              <Sparkles className="h-5 w-5 text-primary flex-shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-foreground">Want a more accurate projection?</p>
+                <p className="text-xs text-muted-foreground">Add your income breakdown, expense categories, and account details.</p>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/onboarding">Add Details</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {!isDemoMode && profile.lastUpdated && (
         <p className="text-xs text-muted-foreground/50 text-center pt-2 pb-4">
           Last updated {new Date(profile.lastUpdated).toLocaleDateString("en-US", {
             month: "short",
