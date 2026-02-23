@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { v4 as uuid } from "uuid";
 import { useFinancialProfile } from "@/hooks/useFinancialProfile";
 import { createEmptyProfile } from "@/lib/defaults";
 import { Button } from "@/components/ui/button";
@@ -29,11 +28,10 @@ const STEPS = [
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { saveProfile } = useFinancialProfile();
+  const { saveProfile, profile: existingProfile } = useFinancialProfile();
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState<FinancialProfile>(() => {
-    const empty = createEmptyProfile();
-    return empty;
+    return existingProfile ?? createEmptyProfile();
   });
 
   const canGoBack = step > 0;
@@ -41,8 +39,7 @@ export default function OnboardingPage() {
   const isLastStep = step === STEPS.length - 1;
 
   const handleSave = () => {
-    draft.lastUpdated = new Date().toISOString();
-    saveProfile(draft);
+    saveProfile({ ...draft, lastUpdated: new Date().toISOString() });
     router.push("/");
   };
 
