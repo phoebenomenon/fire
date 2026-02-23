@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         <FinancialProfileProvider>
           <Header />
-          <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+          <main className="mx-auto max-w-6xl px-4 py-6 pb-20 sm:px-6 sm:pb-6 lg:px-8">
             {children}
           </main>
           <FeedbackButton />
