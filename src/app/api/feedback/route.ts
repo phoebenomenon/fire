@@ -1,8 +1,6 @@
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: Request) {
   try {
     const { message } = await request.json();
@@ -11,6 +9,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
     }
 
+    const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: "FIRE App <onboarding@resend.dev>",
       to: process.env.FEEDBACK_EMAIL!,
