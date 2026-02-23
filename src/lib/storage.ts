@@ -25,8 +25,10 @@ class LocalStorageAdapter implements StorageAdapter {
 
   save(profile: FinancialProfile): void {
     if (typeof window === "undefined") return;
-    profile.lastUpdated = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      ...profile,
+      lastUpdated: new Date().toISOString(),
+    }));
   }
 
   clear(): void {

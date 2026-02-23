@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { v4 as uuid } from "uuid";
 import { storage } from "@/lib/storage";
-import { createEmptyProfile } from "@/lib/defaults";
+import { createEmptyProfile, createDemoProfile } from "@/lib/defaults";
 import type {
   FinancialProfile,
   HouseholdProfile,
@@ -19,6 +19,11 @@ interface FinancialProfileContextValue {
   profile: FinancialProfile | null;
   isLoading: boolean;
   hasData: boolean;
+  isDemoMode: boolean;
+
+  // Demo mode
+  enterDemoMode: () => void;
+  exitDemoMode: () => void;
 
   // Household
   updateHousehold: (updates: Partial<HouseholdProfile>) => void;
@@ -58,6 +63,8 @@ const FinancialProfileContext = createContext<FinancialProfileContextValue | nul
 export function FinancialProfileProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<FinancialProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [demoProfile, setDemoProfile] = useState<FinancialProfile | null>(null);
 
   useEffect(() => {
     const loaded = storage.load();
@@ -65,10 +72,25 @@ export function FinancialProfileProvider({ children }: { children: ReactNode }) 
     setIsLoading(false);
   }, []);
 
+  const enterDemoMode = useCallback(() => {
+    setDemoProfile(createDemoProfile());
+    setIsDemoMode(true);
+  }, []);
+
+  const exitDemoMode = useCallback(() => {
+    setDemoProfile(null);
+    setIsDemoMode(false);
+  }, []);
+
   const persist = useCallback((updated: FinancialProfile) => {
     setProfile(updated);
     storage.save(updated);
-  }, []);
+    // If saving real data, exit demo mode
+    if (isDemoMode) {
+      setDemoProfile(null);
+      setIsDemoMode(false);
+    }
+  }, [isDemoMode]);
 
   const ensureProfile = useCallback((): FinancialProfile => {
     if (profile) return profile;
@@ -210,18 +232,24 @@ export function FinancialProfileProvider({ children }: { children: ReactNode }) 
     setProfile(null);
   }, []);
 
-  const hasData = profile !== null && (
+  // Expose demo profile when in demo mode, real profile otherwise
+  const activeProfile = isDemoMode ? demoProfile : profile;
+
+  const hasData = isDemoMode || (profile !== null && (
     profile.incomes.length > 0 ||
     profile.expenses.length > 0 ||
     profile.assets.length > 0 ||
     profile.liabilities.length > 0
-  );
+  ));
 
   return (
     <FinancialProfileContext.Provider value={{
-      profile,
+      profile: activeProfile,
       isLoading,
       hasData,
+      isDemoMode,
+      enterDemoMode,
+      exitDemoMode,
       updateHousehold,
       updateMember,
       addMember,
