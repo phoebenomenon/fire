@@ -32,7 +32,7 @@ export function EmptyState() {
           onClick={() => setQuickStartOpen(true)}
         >
           <Zap className="h-4 w-4 mr-2" />
-          Quick Start — Just 3 Numbers
+          Quick Start
         </Button>
 
         {/* Secondary: Demo */}

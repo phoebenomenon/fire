@@ -90,7 +90,8 @@ export function createDemoProfile(): FinancialProfile {
 export function buildQuickStartProfile(
   annualIncome: number,
   annualExpenses: number,
-  currentSavings: number
+  currentSavings: number,
+  currentAge: number = 30
 ): FinancialProfile {
   const now = new Date().toISOString();
 
@@ -98,7 +99,7 @@ export function buildQuickStartProfile(
     household: {
       id: uuid(),
       householdName: "",
-      members: [{ name: "You", currentAge: 30, targetRetirementAge: 65 }],
+      members: [{ name: "You", currentAge, targetRetirementAge: 65 }],
       createdAt: now,
       updatedAt: now,
     },
