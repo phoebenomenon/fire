@@ -50,9 +50,9 @@ export function createDemoProfile(): FinancialProfile {
     assumptions: { ...DEFAULT_ASSUMPTIONS },
     incomes: [
       { id: uuid(), label: "Alex — Software Engineer", amount: 225000, frequency: "annual", source: "salary", owner: "Alex", isActive: true },
-      { id: uuid(), label: "Alex — RSU Vesting", amount: 80000, frequency: "annual", source: "investment", owner: "Alex", isActive: true },
+      { id: uuid(), label: "Alex — RSU Vesting", amount: 80000, frequency: "annual", source: "other", owner: "Alex", isActive: true },
       { id: uuid(), label: "Jordan — Product Manager", amount: 185000, frequency: "annual", source: "salary", owner: "Jordan", isActive: true },
-      { id: uuid(), label: "Jordan — RSU Vesting", amount: 45000, frequency: "annual", source: "investment", owner: "Jordan", isActive: true },
+      { id: uuid(), label: "Jordan — RSU Vesting", amount: 45000, frequency: "annual", source: "other", owner: "Jordan", isActive: true },
     ],
     expenses: [
       { id: uuid(), label: "Rent (2BR in SF)", amount: 4100, frequency: "monthly", category: "housing", isEssential: true, isActive: true },
