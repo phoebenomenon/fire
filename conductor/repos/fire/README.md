@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FIRE 🔥
+
+Figure out when you can tell your boss goodbye — a FIRE (Financial Independence, Retire Early) calculator.
+
+## What it does
+
+Enter your income, expenses, assets, and liabilities to see how soon you can reach financial independence. The app calculates your savings rate, projects your investment growth, and shows your FIRE timeline.
+
+- **Quick Start** — get a projection with just 3 numbers
+- **Demo Mode** — explore with realistic sample data (Bay Area tech couple with 1 kid)
+- **Full Setup** — detailed onboarding for a more accurate projection
+
+All data is stored locally in your browser. Nothing is sent to a server.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Feedback
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The app includes a floating feedback button. To enable it, create a `.env.local` file:
 
-## Learn More
+```
+RESEND_API_KEY=your_resend_api_key
+FEEDBACK_EMAIL=your_email@example.com
+```
 
-To learn more about Next.js, take a look at the following resources:
+Get a free API key at [resend.com](https://resend.com).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Deploy to Vercel in one click — it auto-detects the Next.js setup. Add your `RESEND_API_KEY` and `FEEDBACK_EMAIL` as environment variables in the Vercel project settings.
 
-## Deploy on Vercel
+## Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- Radix UI / shadcn/ui
+- Resend (email)
